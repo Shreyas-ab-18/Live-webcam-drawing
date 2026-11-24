@@ -1,31 +1,42 @@
 # Live Webcam Drawing
 
-A real-time air-drawing application built with Python and OpenCV. It tracks a
-colored marker (e.g. a blue bottle cap or sticky note) through the webcam feed
-using HSV color-space thresholding and contour detection, and lets you draw
-on-screen by moving the marker in front of the camera.
+Draw in the air using a colored marker and webcam. OpenCV HSV thresholding and
+contour detection track the marker and render strokes onto a persistent canvas.
 
-## How it works
-- `ColorTracker` converts each frame to HSV and isolates pixels within a target
-  color range, then finds the largest contour in that mask to locate the marker.
-- `DrawingCanvas` accumulates line strokes between consecutive marker positions
-  frame-to-frame and composites them back onto the live video feed.
+## Requirements
 
-## Run it
+- Python 3.10+
+- Webcam
+- Desktop session capable of opening OpenCV windows
+
+## Setup and run
+
 ```bash
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
 python draw.py
 ```
 
 ## Controls
+
 | Key | Action |
-|-----|--------|
-| `1` / `2` / `3` | Switch draw color (blue / green / red) |
+|---|---|
+| `1`, `2`, `3` | Select blue, green, or red |
 | `+` / `-` | Increase / decrease brush thickness |
-| `c` | Clear the canvas |
+| `c` | Clear the canvas and reset the current stroke |
 | `q` | Quit |
 
-## Notes
-- Default tracking color is tuned for a blue object under normal indoor
-  lighting. Adjust `lower_hsv` / `upper_hsv` in `draw.py` for your marker/lighting.
-- Requires a connected webcam.
+The default HSV range targets a blue object. Lighting, camera quality, and
+marker shade affect tracking. Adjust the HSV bounds in `ColorTracker`.
+
+## Tests
+
+```bash
+pip install pytest
+pytest
+```
+
+The unit tests cover canvas clearing and stroke reset. Webcam integration
+requires a physical camera and must be tested on the target machine.
