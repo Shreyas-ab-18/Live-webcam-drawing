@@ -6,13 +6,23 @@ import numpy as np
 class ColorTracker:
     """Find the largest blob inside a configurable HSV range."""
     def __init__(self, lower_hsv, upper_hsv, min_area=800):
-        self.lower_hsv = np.asarray(lower_hsv, dtype=np.uint8)
-        self.upper_hsv = np.asarray(upper_hsv, dtype=np.uint8)
+        lower = np.asarray(lower_hsv)
+        upper = np.asarray(upper_hsv)
+        if lower.shape != (3,) or upper.shape != (3,):
+            raise ValueError("HSV bounds must each contain exactly three values.")
+        if np.any(lower < 0) or np.any(upper > 255) or np.any(lower > upper):
+            raise ValueError("HSV bounds must be ordered values between 0 and 255.")
+        if min_area <= 0:
+            raise ValueError("min_area must be positive.")
+        self.lower_hsv = lower.astype(np.uint8)
+        self.upper_hsv = upper.astype(np.uint8)
         self.min_area = min_area
 
     def locate(self, frame_bgr):
         if frame_bgr is None or frame_bgr.size == 0:
             raise ValueError("A non-empty BGR frame is required.")
+        if frame_bgr.ndim != 3 or frame_bgr.shape[2] != 3:
+            raise ValueError("Input frame must be a three-channel BGR image.")
         hsv = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, self.lower_hsv, self.upper_hsv)
         mask = cv2.erode(mask, None, iterations=2)
