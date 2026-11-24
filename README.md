@@ -38,5 +38,4 @@ pip install pytest
 pytest
 ```
 
-The unit tests cover canvas clearing and stroke reset. Webcam integration
-requires a physical camera and must be tested on the target machine.
+The unit tests cover canvas clearing, stroke reset, HSV configuration validation, and invalid frame handling. Webcam integration requires a physical camera and must be tested on the target machine.
