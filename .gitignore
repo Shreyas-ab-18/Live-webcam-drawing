@@ -4,3 +4,7 @@ __pycache__/
 venv/
 *.jpg
 *.png
+# Test and coverage artifacts
+.pytest_cache/
+.coverage
+htmlcov/
